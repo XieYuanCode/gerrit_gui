@@ -1,0 +1,128 @@
+<template>
+  <n-layout has-sider class="main-layout h-full w-full">
+    <n-layout-sider bordered content-style="padding: 10px;">
+      <Explorer></Explorer>
+    </n-layout-sider>
+    <n-layout-content content-style="padding: 10px;" style="position: relative;">
+      <n-tabs type="segment">
+        <n-tab-pane name="chap1" tab="功能测试">
+          <n-space>
+            <n-button @click="getData">getData</n-button>
+            <n-button @click="logout">logout</n-button>
+            <n-button @click="clone_gerrit_project">{{ `${cloneButtonText}(${received_objects}:${total_objects})`
+            }}</n-button>
+            <n-button @click="showContextMenu">Context Menu</n-button>
+            <n-button @click="get_default_clone_directory">Get Default Clone Dir</n-button>
+            <n-button @click="update_default_clone_directory">Update Default Clone Dir</n-button>
+          </n-space>
+        </n-tab-pane>
+      </n-tabs>
+
+      <!-- <n-space class="w-full" justify="space-between" > -->
+      <n-popover trigger="click">
+        <template #trigger>
+          <n-button size="small" circle style="position: fixed; right: 10px; bottom: 10px;">
+            <n-icon>
+              <CloudDownloadOutlined></CloudDownloadOutlined>
+            </n-icon>
+          </n-button>
+        </template>
+        <ClonePopover />
+      </n-popover>
+      <!-- </n-space> -->
+    </n-layout-content>
+  </n-layout>
+</template>
+
+<script setup lang="ts">
+import { tauriStore, useUserStore } from '../store';
+import { NIcon, useMessage } from "naive-ui"
+import Explorer from "./Explorer.vue"
+import { invoke } from '@tauri-apps/api/tauri'
+import { emit, listen } from '@tauri-apps/api/event'
+import { ref, Component, h } from 'vue';
+import { CloudDownloadOutlined } from "@vicons/material"
+import ClonePopover from "./ClonePopover.vue"
+import ContextMenu from '@imengyu/vue3-context-menu'
+import { open } from '@tauri-apps/api/dialog';
+
+
+const message = useMessage()
+const userStore = useUserStore()
+
+const cloneButtonText = ref("Clone")
+const total_objects = ref("0")
+const received_objects = ref("0")
+
+const logout = async () => {
+  await userStore.logout()
+  message.success("登出成功")
+}
+
+const getData = async () => {
+  const data = await tauriStore.entries()
+  console.log(data)
+}
+
+const clone_gerrit_project = async () => {
+  let totalObjectsUpdatedListener = await listen("clone_total_objects_updated", (t: any) => {
+    total_objects.value = t.payload.message
+  })
+  let receivedObjectsUpdatedListener = await listen("clone_received_objects_updated", (r: any) => {
+    received_objects.value = r.payload.message
+  })
+  invoke('my_custom_command').then(() => {
+    totalObjectsUpdatedListener()
+    receivedObjectsUpdatedListener()
+  })
+    .catch(error => {
+      console.error(error)
+    })
+}
+
+function renderIcon(icon: Component) {
+  return () => h(NIcon, null, { default: () => h(icon) })
+}
+
+const showContextMenu = (event: MouseEvent) => {
+  ContextMenu.showContextMenu({
+    x: event.x,
+    y: event.y,
+    theme: 'mac',
+    items: [
+      {
+        label: "A menu item",
+        onClick: () => {
+          alert("You click a menu item");
+        },
+        icon: renderIcon(CloudDownloadOutlined)
+      },
+      {
+        label: "A submenu",
+        children: [
+          { label: "Item1" },
+          { label: "Item2" },
+          { label: "Item3" },
+        ]
+      },
+    ]
+  });
+
+}
+
+const get_default_clone_directory = async () => {
+  let home = await invoke("get_default_clone_directory")
+
+  console.log(home);
+}
+
+const update_default_clone_directory = async () => {
+  const filePath = await open({
+    directory: true,
+    multiple: false,
+    title: "Select default clone directory"
+  });
+
+  console.log(filePath);
+}
+</script>
