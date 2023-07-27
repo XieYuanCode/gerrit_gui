@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { lightTheme } from "naive-ui"
 import { onMounted } from "vue"
-import { tauriStore, useUserStore } from "./store";
+import { tauriStore, useUserStore, usePrepareTaskStore } from "./store";
 import { useRouter } from "vue-router"
 import axiosInstanceManager from "./message/axios";
+import { customEventTarget } from "./common/event";
 
 const router = useRouter();
 const userStore = useUserStore()
@@ -22,6 +23,8 @@ onMounted(async () => {
       username: userData.username,
       password: password
     }
+
+    customEventTarget.dispatchEvent(new Event("DataReady"))
   }
 
   tauriStore.onChange((key, newValue) => {

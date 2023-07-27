@@ -1,6 +1,6 @@
 <template>
-  <n-space vertical justify="space-between" class="h-full">
-    <n-tabs type="segment" size="small" v-model:value="selectedTabView">
+  <div style="display: flex; flex-direction: column; justify-content: space-between; width: 100%;" class="h-full pt-5">
+    <n-tabs type="segment" style="max-height: 93%; overflow-y: scroll;" size="small" v-model:value="selectedTabView">
       <n-tab-pane name="local">
         <template #tab>
           <n-icon>
@@ -9,7 +9,7 @@
         </template>
         <LocalExplorer></LocalExplorer>
       </n-tab-pane>
-      <n-tab-pane name="cloud">
+      <n-tab-pane name="cloud" style="max-height: 100%">
         <template #tab>
           <n-icon>
             <Cloud20Regular></Cloud20Regular>
@@ -19,20 +19,20 @@
       </n-tab-pane>
     </n-tabs>
     <n-space class="w-full" justify="space-between">
-      <n-button size="small" circle @click="goToSettingView">
+      <n-button size="small" circle @click="goToSettingView" quaternary>
         <n-icon>
           <Settings20Regular></Settings20Regular>
         </n-icon>
       </n-button>
       <n-dropdown trigger="click" v-if="selectedTabView === 'local'" size="small" placement="top">
-        <n-button size="small" circle>
+        <n-button size="small" circle quaternary>
           <n-icon>
             <Add20Regular></Add20Regular>
           </n-icon>
         </n-button>
       </n-dropdown>
     </n-space>
-  </n-space>
+  </div>
 </template>
 
 <script setup lang="ts">

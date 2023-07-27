@@ -989,6 +989,7 @@ dependencies = [
  "git2",
  "serde",
  "serde_json",
+ "ssh_config",
  "tauri",
  "tauri-build",
  "tauri-plugin-autostart",
@@ -2854,6 +2855,12 @@ dependencies = [
  "libc",
  "system-deps 5.0.0",
 ]
+
+[[package]]
+name = "ssh_config"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "08044686521f352c6d1f522ba349c3dd52813819fa8353b60bd3d2107f6dca0a"
 
 [[package]]
 name = "stable_deref_trait"

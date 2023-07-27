@@ -1,33 +1,64 @@
 <template>
-  <div class="project-container overflow-y-scroll">
-    <n-menu :options="projectsMenuItems"/>
+  <div class="project-container overflow-y-scroll" >
+    <n-scrollbar class="scroll-view" style="max-height: calc(100vh * 0.8);">
+      123 <br/>
+      123 <br/>
+      123 <br/>
+      123 <br/>
+      123 <br/>
+      123 <br/>
+      123 <br/>
+      123 <br/>
+      123 <br/>
+      123 <br/>
+      123 <br/>
+      123 <br/>
+      123 <br/>
+      123 <br/>
+      123 <br/>
+      123 <br/>
+      123 <br/>
+      123 <br/>
+      123 <br/>
+      123 <br/>
+      123 <br/>
+      123 <br/>
+      123 <br/>
+      123 <br/>
+      123 <br/>
+      123 <br/>
+      123 <br/>
+      123 <br/>
+      123 <br/>
+      123 <br/>
+      123 <br/>
+      123 <br/>
+      123 <br/>
+      123 <br/>
+      123 <br/>
+      123 <br/>
+      123 <br/>
+      123 <br/>
+      123 <br/>
+    </n-scrollbar>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, Component, h } from "vue";
-import { getProjects } from "../message/projects"
-import { NIcon, type MenuOption } from 'naive-ui'
+import { IGerritProject, getProjects } from "../message/projects"
+import { NIcon } from 'naive-ui'
 import { Archive20Regular } from "@vicons/fluent";
 // import ContextMenu from '@imengyu/vue3-context-menu'
 
-const projectsMenuItems = ref<MenuOption[]>([])
+let projects = ref<IGerritProject[]>([])
 
 function renderIcon(icon: Component) {
   return () => h(NIcon, null, { default: () => h(icon) })
 }
 
 try {
-  const projects = await getProjects()
-  projectsMenuItems.value = projects.map(project => {
-    return {
-      label: project.name,
-      key: project.id,
-      icon: renderIcon(Archive20Regular)
-    }
-  })
-
-  console.log(projects);
+  projects.value = await getProjects()
 
 } catch (error) {
   console.error(error);

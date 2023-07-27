@@ -2,7 +2,7 @@
   <div class="clone-popover-container">
     <div class="popover-header relative">
       <n-icon class="mr-2">
-        <CloudDownloadOutlined></CloudDownloadOutlined>
+        <DrawerArrowDownload20Regular></DrawerArrowDownload20Regular>
       </n-icon>
       Clone Tasks
 
@@ -32,14 +32,13 @@
         </n-button>
       </div>
     </div>
-    <n-empty description="No cloning tasks" v-else>
+    <n-empty description="No cloning tasks" class="mt-5" v-else>
     </n-empty>
   </div>
 </template>
 
 <script setup lang="ts">
-import { CloudDownloadOutlined } from "@vicons/material"
-import { FolderOpen20Regular, Delete20Regular } from "@vicons/fluent"
+import { FolderOpen20Regular, Delete20Regular, DrawerArrowDownload20Regular } from "@vicons/fluent"
 import { useCloneStore, CloneTaskStatus } from "../store"
 
 const cloneStore = useCloneStore()

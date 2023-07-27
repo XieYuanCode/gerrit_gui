@@ -5,6 +5,7 @@ import { uuid } from "./common/uuid";
 import { listen } from '@tauri-apps/api/event'
 import { invoke } from "@tauri-apps/api";
 import * as tauriAutoLauncher from "tauri-plugin-autostart-api";
+import { checkRemoteSSHConfig } from "./common/prepare";
 
 export const tauriStore = new Store(".settings.dat");
 
@@ -121,4 +122,63 @@ export const useGeneralSettingStore = defineStore("generalSetting", {
   }
 })
 
+export enum PrepareTaskStatus { UnStart, Running, Succeed, Failed, Warring }
+
+export class PrepareTask {
+  public status: PrepareTaskStatus = PrepareTaskStatus.UnStart
+  public fixButtonText: string = "fix"
+  public fixFn?: () => Promise<void>
+
+  constructor(
+    public name: string,
+    public task: () => Promise<boolean>
+  ) { }
+
+  async run() {
+    try {
+      this.status = PrepareTaskStatus.Running
+      let result = await this.task()
+
+      console.log(`Prepare task: ${this.name} 运行结果: ${result}` );
+      if(result === true) {
+        this.status = PrepareTaskStatus.Succeed
+      } else {
+        this.status = PrepareTaskStatus.Failed
+      }
+    } catch (error) {
+      this.status = PrepareTaskStatus.Failed
+    }
+  }
+}
+
+export const usePrepareTaskStore = defineStore("prepareTask", {
+  state() {
+    return {
+      tasks: [
+        new PrepareTask("Check SSH Config", checkRemoteSSHConfig)
+      ] as PrepareTask[]
+    }
+  },
+  getters: {
+    isAllSucceed: (state) => {
+      return !!state.tasks.find(task => task.status === PrepareTaskStatus.Succeed)
+    },
+    isTaskRunning: (state) => {
+      return !!state.tasks.find(task => task.status === PrepareTaskStatus.Running)
+    }
+  },
+  actions: {
+    startAllTasks() {
+      this.tasks.forEach(task => task.run())
+    }
+  }
+})
+
+export const useViewModelStore = defineStore("viewModel", {
+  state() {
+    return {
+      toolbarTitle: "Gerrit Gui"
+    }
+  },
+})
 

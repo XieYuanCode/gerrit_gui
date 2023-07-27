@@ -1,5 +1,5 @@
 <template>
-  <n-tabs type="segment" size="small">
+  <n-tabs type="segment" size="small" style="max-height: 100%">
     <n-tab-pane name="changes">
       <template #tab>
         <n-icon>
@@ -9,7 +9,7 @@
       <ChangesExplorer />
       123
     </n-tab-pane>
-    <n-tab-pane name="Projects">
+    <n-tab-pane name="Projects" style="max-height: 100%">
       <template #tab>
         <n-icon>
           <Archive20Regular></Archive20Regular>

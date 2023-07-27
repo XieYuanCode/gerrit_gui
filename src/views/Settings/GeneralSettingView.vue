@@ -62,7 +62,7 @@ const updateDefaultCloneDirectory = async () => {
   });
 
   if(dir !== null) {
-    await generalSettingStore.updateDefaultClonedDir(dir as string)
+    await generalSettingStore.updateDefaultClonedDir(dir as string)                                      
   }
 }
 

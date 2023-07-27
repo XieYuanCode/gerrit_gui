@@ -6,6 +6,7 @@ use tauri_plugin_autostart::MacosLauncher;
 mod clone;
 mod common;
 mod directory;
+mod ssh;
 
 fn main() {
     tauri::Builder::default()
@@ -19,7 +20,9 @@ fn main() {
             crate::clone::clone_gerrit_project,
             crate::common::toggle_setting_window_visible,
             crate::directory::get_home_directory,
-            crate::directory::get_default_clone_directory
+            crate::directory::get_default_clone_directory,
+            crate::ssh::get_local_ssh_configs,
+            crate::ssh::is_ssh_config_available
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

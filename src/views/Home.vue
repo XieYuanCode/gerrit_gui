@@ -1,51 +1,46 @@
 <template>
   <n-layout has-sider class="main-layout h-full w-full">
     <n-layout-sider bordered content-style="padding: 10px;">
-      <Explorer></Explorer>
+      <Explorer data-tauri-drag-region></Explorer>
     </n-layout-sider>
-    <n-layout-content content-style="padding: 10px;" style="position: relative;">
-      <n-tabs type="segment">
-        <n-tab-pane name="chap1" tab="功能测试">
-          <n-space>
-            <n-button @click="getData">getData</n-button>
-            <n-button @click="logout">logout</n-button>
-            <n-button @click="clone_gerrit_project">{{ `${cloneButtonText}(${received_objects}:${total_objects})`
-            }}</n-button>
-            <n-button @click="showContextMenu">Context Menu</n-button>
-            <n-button @click="get_default_clone_directory">Get Default Clone Dir</n-button>
-            <n-button @click="update_default_clone_directory">Update Default Clone Dir</n-button>
-          </n-space>
-        </n-tab-pane>
-      </n-tabs>
+    <n-layout-content style="position: relative; display: flex; flex-direction: column;">
+      <Toolbar></Toolbar>
+      <div class="main-content p-2">
+        <n-space>
+          <n-button @click="getData">getData</n-button>
+          <n-button @click="logout">logout</n-button>
+          <n-button @click="clone_gerrit_project">{{ `${cloneButtonText}(${received_objects}:${total_objects})`
+          }}</n-button>
+          <n-button @click="showContextMenu">Context Menu</n-button>
+          <n-button @click="get_default_clone_directory">Get Default Clone Dir</n-button>
+          <n-button @click="update_default_clone_directory">Update Default Clone Dir</n-button>
+        </n-space>
+      </div>
+
 
       <!-- <n-space class="w-full" justify="space-between" > -->
-      <n-popover trigger="click">
-        <template #trigger>
-          <n-button size="small" circle style="position: fixed; right: 10px; bottom: 10px;">
-            <n-icon>
-              <CloudDownloadOutlined></CloudDownloadOutlined>
-            </n-icon>
-          </n-button>
-        </template>
-        <ClonePopover />
-      </n-popover>
+
       <!-- </n-space> -->
     </n-layout-content>
   </n-layout>
 </template>
 
 <script setup lang="ts">
-import { tauriStore, useUserStore } from '../store';
+import { tauriStore, useUserStore, usePrepareTaskStore } from '../store';
 import { NIcon, useMessage } from "naive-ui"
 import Explorer from "./Explorer.vue"
 import { invoke } from '@tauri-apps/api/tauri'
 import { emit, listen } from '@tauri-apps/api/event'
 import { ref, Component, h } from 'vue';
-import { CloudDownloadOutlined } from "@vicons/material"
-import ClonePopover from "./ClonePopover.vue"
 import ContextMenu from '@imengyu/vue3-context-menu'
 import { open } from '@tauri-apps/api/dialog';
+import Toolbar from './Toolbar.vue';
+import { customEventTarget } from '../common/event';
 
+const prepareTaskStore = usePrepareTaskStore()
+customEventTarget.addEventListener("DataReady", () => {
+  prepareTaskStore.startAllTasks()
+})
 
 const message = useMessage()
 const userStore = useUserStore()
@@ -94,8 +89,7 @@ const showContextMenu = (event: MouseEvent) => {
         label: "A menu item",
         onClick: () => {
           alert("You click a menu item");
-        },
-        icon: renderIcon(CloudDownloadOutlined)
+        }
       },
       {
         label: "A submenu",
