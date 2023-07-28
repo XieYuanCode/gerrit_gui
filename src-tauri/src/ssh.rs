@@ -53,8 +53,6 @@ pub async fn is_ssh_config_available(user_name: String) -> Result<bool, String> 
                     let host_settings = ssh_config.query("192.168.180.150");
                     let port = host_settings["Port"];
 
-                    println!("{}", port);
-
                     if port == "8080" {
                         if host_settings["PubkeyAcceptedKeyTypes"] != "+ssh-rsa" {
                             Ok(false.into())

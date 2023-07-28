@@ -1,5 +1,5 @@
 <template>
-  <div class="clone-popover-container">
+  <div class="clone-popover-container  select-none">
     <div class="popover-header relative">
       <n-icon class="mr-2">
         <DrawerArrowDownload20Regular></DrawerArrowDownload20Regular>

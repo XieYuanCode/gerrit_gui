@@ -1,6 +1,6 @@
 <template>
   <n-layout has-sider class="main-layout h-full w-full">
-    <n-layout-sider bordered content-style="padding: 10px;">
+    <n-layout-sider bordered content-style="padding-top: 10px;padding-bottom: 10px;">
       <Explorer data-tauri-drag-region></Explorer>
     </n-layout-sider>
     <n-layout-content style="position: relative; display: flex; flex-direction: column;">
@@ -14,6 +14,7 @@
           <n-button @click="showContextMenu">Context Menu</n-button>
           <n-button @click="get_default_clone_directory">Get Default Clone Dir</n-button>
           <n-button @click="update_default_clone_directory">Update Default Clone Dir</n-button>
+          <n-button @click="show_in_folder">Show In Folder</n-button>
         </n-space>
       </div>
 
@@ -119,4 +120,6 @@ const update_default_clone_directory = async () => {
 
   console.log(filePath);
 }
+
+const show_in_folder = () => invoke("show_in_folder", { path: "/Users/xieyuan/code/tauri/gerrit-gui/src-tauri" })
 </script>

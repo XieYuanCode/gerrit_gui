@@ -1,16 +1,16 @@
 <template>
   <div class="task-popover-container">
-    <div class="popover-header relative">
+    <div class="popover-header relative select-none">
       <n-icon class="mr-2">
         <ClipboardTaskListRtl20Regular></ClipboardTaskListRtl20Regular>
       </n-icon>
       Prepare Tasks
     </div>
 
-    <div class="w-full overflow-y-scroll h-5/6 pr-5 relative">
+    <div class="w-full overflow-y-scroll h-5/6 pr-5 relative  select-none">
       <div v-for="prepareTask in prepareTaskStore.tasks" class="prepare-task-row flex justify-between items-center">
         <n-ellipsis style="max-width: 80%; margin-right: 0.5rem;">
-          {{ prepareTask.name }}
+          - {{ prepareTask.name }}
         </n-ellipsis>
 
         <n-icon>

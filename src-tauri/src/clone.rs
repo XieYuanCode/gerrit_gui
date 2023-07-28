@@ -11,7 +11,7 @@ struct Payload {
 
 // git clone "ssh://xieyuan@192.168.180.150:29418/ufe/ufe_test" && scp -p -P 29418 xieyuan@192.168.180.150:hooks/commit-msg "ufe_test/.git/hooks/"
 #[tauri::command]
-pub async fn clone_gerrit_project(app: tauri::AppHandle) -> Result<(), String> {
+pub async fn clone_gerrit_project(app: tauri::AppHandle,  remote_path: String, local_path: String) -> Result<(), String> {
     let mut callbacks = RemoteCallbacks::new();
 
     // Prepare callbacks.
@@ -55,8 +55,9 @@ pub async fn clone_gerrit_project(app: tauri::AppHandle) -> Result<(), String> {
 
     // Clone the project
     let result = builder.clone(
-        "ssh://xieyuan@192.168.180.150:29418/ufe/aep-base",
-        Path::new("/Users/xieyuan/code/gerrit/aep-base"),
+        // "ssh://xieyuan@192.168.180.150:29418/ufe/aep-base",
+        &remote_path,
+        Path::new(&local_path),
     );
 
     match result {

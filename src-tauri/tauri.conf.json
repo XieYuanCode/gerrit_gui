@@ -11,6 +11,7 @@
     "version": "0.0.0"
   },
   "tauri": {
+    "macOSPrivateApi": true,
     "allowlist": {
       "all": false,
       "shell": {
@@ -19,12 +20,21 @@
       },
       "window": {
         "create": true,
-        "startDragging": true
+        "show": true,
+        "hide": true,
+        "startDragging": true,
+        "maximize": true,
+        "minimize": true,
+        "unmaximize": true,
+        "unminimize": true,
+        "setFocus": true
       },
       "http": {
         "all": true,
         "request": true,
-        "scope": ["http://192.168.180.150:8080/gerrit/a/*"]
+        "scope": [
+          "http://192.168.180.150:8080/gerrit/a/*"
+        ]
       },
       "dialog": {
         "all": true

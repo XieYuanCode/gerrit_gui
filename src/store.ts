@@ -5,10 +5,13 @@ import { uuid } from "./common/uuid";
 import { listen } from '@tauri-apps/api/event'
 import { invoke } from "@tauri-apps/api";
 import * as tauriAutoLauncher from "tauri-plugin-autostart-api";
-import { checkRemoteSSHConfig } from "./common/prepare";
+import { checkLocalSSHConfig, checkRemoteSSHConfig } from "./common/prepare";
+import { IGerritProject, getProjects } from "./message/projects";
+import { join } from '@tauri-apps/api/path';
 
 export const tauriStore = new Store(".settings.dat");
 
+//#region User Store
 export const useUserStore = defineStore('user', {
   state: () => {
     return {
@@ -53,7 +56,10 @@ export const useUserStore = defineStore('user', {
     }
   }
 })
+//#endregion
 
+
+//#region Clone Task Store
 export enum CloneTaskStatus {
   UnStart, Running, Succeed, Failed
 }
@@ -75,12 +81,24 @@ export class CloneTask {
     })
     let unListenForReceivedObjectsUpdatedEvent = await listen("clone_received_objects_updated", (r: any) => {
       this.receivedObjects = r.payload.message
+
+      this.progress = this.receivedObjects / this.totalObjects * 100
+      console.log(this.progress);
     })
 
-    await invoke("clone_gerrit_project")
-    unListenForTotalObjectsUpdatedEvent()
-    unListenForReceivedObjectsUpdatedEvent()
+    try {
+      // let localPath = await join()
+      await invoke("clone_gerrit_project", {
+        remotePath: "ssh://xieyuan@192.168.180.150:29418/ufe/aep-base",
+        localPath: "/Users/xieyuan/code/gerrit/aep-base"
+      })
 
+    } catch (error) {
+      this.status = CloneTaskStatus.Failed
+    } finally {
+      unListenForTotalObjectsUpdatedEvent()
+      unListenForReceivedObjectsUpdatedEvent()
+    }
   }
 }
 
@@ -90,8 +108,29 @@ export const useCloneStore = defineStore("clone", {
       cloneTasks: [] as CloneTask[]
     }
   },
+  getters: {
+    hasRunningCloneTask: (state) => {
+      return !!state.cloneTasks.find(task => task.status === CloneTaskStatus.Running)
+    },
+    hasFailedCloneTask: (state) => {
+      return !!state.cloneTasks.find(task => task.status === CloneTaskStatus.Failed)
+    }
+  },
+  actions: {
+    async clone(projectName: string) {
+      let task = new CloneTask(projectName)
+      this.cloneTasks.push(task)
+      await task.clone()
+    },
+    gerritClone(projectName: string) {
+      // git clone "ssh://xieyuan@192.168.180.150:29418/ufe/aep-base" && scp -p -P 29418 xieyuan@192.168.180.150:hooks/commit-msg "aep-base/.git/hooks/"
+      console.log(projectName);
+    }
+  }
 })
+//#endregion
 
+//#region General Setting Store
 export const useGeneralSettingStore = defineStore("generalSetting", {
   state: () => {
     return {
@@ -121,7 +160,9 @@ export const useGeneralSettingStore = defineStore("generalSetting", {
     }
   }
 })
+//#endregion
 
+//#region Prepare Task Store
 export enum PrepareTaskStatus { UnStart, Running, Succeed, Failed, Warring }
 
 export class PrepareTask {
@@ -139,8 +180,8 @@ export class PrepareTask {
       this.status = PrepareTaskStatus.Running
       let result = await this.task()
 
-      console.log(`Prepare task: ${this.name} 运行结果: ${result}` );
-      if(result === true) {
+      console.log(`Prepare task: ${this.name} 运行结果: ${result}`);
+      if (result === true) {
         this.status = PrepareTaskStatus.Succeed
       } else {
         this.status = PrepareTaskStatus.Failed
@@ -155,7 +196,8 @@ export const usePrepareTaskStore = defineStore("prepareTask", {
   state() {
     return {
       tasks: [
-        new PrepareTask("Check SSH Config", checkRemoteSSHConfig)
+        new PrepareTask("Check Remote SSH Config", checkRemoteSSHConfig),
+        new PrepareTask("Check Local SSH Config", checkLocalSSHConfig),
       ] as PrepareTask[]
     }
   },
@@ -173,12 +215,45 @@ export const usePrepareTaskStore = defineStore("prepareTask", {
     }
   }
 })
+//#endregion
 
+//#region View Model Store
 export const useViewModelStore = defineStore("viewModel", {
   state() {
     return {
-      toolbarTitle: "Gerrit Gui"
+      toolbarTitle: "Gerrit Gui",
+      toolbarSearchText: "",
+      isSelectedProjectOrOnProjectPage: false,
+      selectedProjectID: undefined
     }
   },
 })
+//#endregion
+
+//#region Project Store
+export const useProjectStore = defineStore("projects", {
+  state() {
+    return {
+      remoteProjects: [] as IGerritProject[],
+      selectedRemoteId: "",
+      remoteProjectSearchText: ""
+    }
+  },
+  actions: {
+    async loadRemoteProjects() {
+      this.remoteProjects = await getProjects()
+    }
+  },
+  getters: {
+    remoteProjectsFiltered: (state) => {
+      if (state.remoteProjectSearchText === "") {
+        return state.remoteProjects
+      } else {
+        return state.remoteProjects.filter(project => project.name.includes(state.remoteProjectSearchText))
+      }
+    }
+  }
+})
+//#endregion
+
 
