@@ -7,23 +7,32 @@
       Prepare Tasks
     </div>
 
-    <div class="w-full overflow-y-scroll h-5/6 pr-5 relative  select-none">
+    <div class="w-full overflow-y-auto h-5/6 pr-5 relative select-none pb-5">
       <div v-for="prepareTask in prepareTaskStore.tasks" class="prepare-task-row flex justify-between items-center">
         <n-ellipsis style="max-width: 80%; margin-right: 0.5rem;">
           - {{ prepareTask.name }}
         </n-ellipsis>
 
-        <n-icon>
-          <CheckmarkStarburst20Regular v-if="prepareTask.status === PrepareTaskStatus.Succeed" style="color: green;"></CheckmarkStarburst20Regular>
-          <ErrorCircle20Regular v-if="prepareTask.status === PrepareTaskStatus.Failed"  style="color: red;"></ErrorCircle20Regular>
-          <ArrowClockwise20Filled v-if="prepareTask.status === PrepareTaskStatus.Running" class="animate-spin"></ArrowClockwise20Filled>
-        </n-icon>
+        <n-space align="center">
+          <n-icon>
+            <CheckmarkStarburst20Regular v-if="prepareTask.status === PrepareTaskStatus.Succeed" style="color: green;">
+            </CheckmarkStarburst20Regular>
+            <ErrorCircle20Regular v-if="prepareTask.status === PrepareTaskStatus.Failed" style="color: red;">
+            </ErrorCircle20Regular>
+            <ArrowClockwise20Filled v-if="prepareTask.status === PrepareTaskStatus.Running" class="animate-spin">
+            </ArrowClockwise20Filled>
+          </n-icon>
+
+          <n-button size="tiny" class="fix-button mb-2" @click="prepareTask.fix()">{{ prepareTask.fixButtonText || "Fix" }}</n-button>
+        </n-space>
+
       </div>
       <div class="fixed bottom-8 text-xs text-yellow-700 flex items-center">
         <n-icon>
-          <Warning20Regular/>
+          <Warning20Regular />
         </n-icon>
-        请确保预检查任务执行成功，否则可能影响clone等功能</div>
+        请确保预检查任务执行成功，否则可能影响clone等功能
+      </div>
       <n-divider class="fixed bottom-1 w-11/12"></n-divider>
     </div>
   </div>
@@ -58,5 +67,4 @@ const prepareTaskStore = usePrepareTaskStore()
   margin-top: 10px;
   margin-bottom: 10px;
   border-bottom: 1px solid rgb(231, 231, 231);
-}
-</style>
+}</style>

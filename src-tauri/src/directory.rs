@@ -81,3 +81,15 @@ pub fn show_in_folder(path: String) {
         .unwrap();
   }
 }
+
+
+#[tauri::command]
+pub fn show_in_terminal(path: String) {
+  #[cfg(target_os = "windows")]
+  {
+    Command::new("wt")
+        .args(["-d", &path]) // The comma after select is not a typo
+        .spawn()
+        .unwrap();
+  }
+}

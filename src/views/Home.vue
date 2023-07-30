@@ -15,6 +15,7 @@
           <n-button @click="get_default_clone_directory">Get Default Clone Dir</n-button>
           <n-button @click="update_default_clone_directory">Update Default Clone Dir</n-button>
           <n-button @click="show_in_folder">Show In Folder</n-button>
+          <n-button @click="show_in_terminal">Show In Terminal</n-button>
         </n-space>
       </div>
 
@@ -121,5 +122,6 @@ const update_default_clone_directory = async () => {
   console.log(filePath);
 }
 
-const show_in_folder = () => invoke("show_in_folder", { path: "/Users/xieyuan/code/tauri/gerrit-gui/src-tauri" })
+const show_in_folder = () => invoke("show_in_folder", { path: "E:\\Documents\\gerrit_gui" })
+const show_in_terminal = () => invoke("show_in_terminal", { path: "e:/Documents/gerrit_gui" })
 </script>

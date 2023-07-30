@@ -11,11 +11,16 @@ export const prepare = async () => {
 
 const registerShortcuts = async () => {
   // 打开设置页面
-  await registerShortcutWithInvoke("command+,", "toggle_setting_window_visible")
+  await registerShortcutWithInvoke("mod+,", "toggle_setting_window_visible")
   // 全局搜索
-  await registerShortcutWithEvent("command+f", () => customEventTarget.dispatchEvent(new Event("Shortcut.FocusSearchInput")))
-  await registerShortcutWithEvent("command+shift+o", async () => {
+  await registerShortcutWithEvent("mod+f", (e) => {
+    e.preventDefault()
+    customEventTarget.dispatchEvent(new Event("Shortcut.FocusSearchInput"))
+  })
+  await registerShortcutWithEvent("mod+shift+o", async () => {
     const quickOpenWindow = WebviewWindow.getByLabel('quickOpenWindow')
+
+    console.log(quickOpenWindow)
 
     if (quickOpenWindow) {
       const visible = await quickOpenWindow.isVisible()
@@ -39,6 +44,7 @@ const registerShortcuts = async () => {
         focus: true,
         transparent: true,
         decorations: false
+      
       })
 
       webview.onFocusChanged((isFocusEvent) => {
@@ -54,13 +60,13 @@ const registerShortcuts = async () => {
   })
 }
 
-const registerShortcutWithEvent = async (shortcut: string, callback: () => void) => {
+const registerShortcutWithEvent = async (shortcut: string, callback: (e: KeyboardEvent) => void) => {
   mousetrap.bind(shortcut, callback)
 }
 
 const registerShortcutWithInvoke = async (shortcut: string, invokeName: string) => {
-  mousetrap.bind(shortcut, () => {
-    console.log("123");
+  mousetrap.bind(shortcut, (event: KeyboardEvent) => {
+    event.preventDefault()
     invoke(invokeName)
   })
 }
@@ -68,14 +74,21 @@ const registerShortcutWithInvoke = async (shortcut: string, invokeName: string) 
 export const checkRemoteSSHConfig = async (): Promise<boolean> => {
   try {
     const remoteSSHConfigs = await getRemoteSSHConfigs()
+
     let remoteSSHList = remoteSSHConfigs.map(s => s.ssh_public_key?.trim().replace(/\n/g, ""))
+    console.log(remoteSSHList)
 
     const localSSHConfig = await invoke<string>("get_local_ssh_configs")
+    console.log(localSSHConfig)
 
-    return remoteSSHList.includes(localSSHConfig)
+    return remoteSSHList.includes(localSSHConfig.trim().replace(/\n/g, ""))
   } catch (error) {
     return false
   }
+}
+
+export const generateSSHKey = () => {
+
 }
 
 export const checkLocalSSHConfig = async () => {

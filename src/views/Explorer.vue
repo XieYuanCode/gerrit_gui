@@ -1,6 +1,6 @@
 <template>
   <div style="display: flex; flex-direction: column; justify-content: space-between; width: 100%;" class="h-full pt-5 px-2">
-    <n-tabs type="segment" style="max-height: 93%; overflow-y: scroll;" size="small" v-model:value="selectedTabView">
+    <n-tabs type="segment" style="max-height: 93%" size="small" v-model:value="selectedTabView">
       <n-tab-pane name="local">
         <template #tab>
           <n-icon>

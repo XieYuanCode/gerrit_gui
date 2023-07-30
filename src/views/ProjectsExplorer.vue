@@ -1,11 +1,11 @@
 <template>
-  <div class="project-container overflow-y-scroll select-none">
+  <div class="project-container select-none">
     <n-input size="tiny" placeholder="search projects" v-model:value="projectStore.remoteProjectSearchText">
       <template #prefix>
         <n-icon :component="Filter20Regular" />
       </template>
     </n-input>
-    <div class="scroll-view" style="max-height: calc(100vh * 0.8);">
+    <n-scrollbar class="scroll-view" style="max-height: calc(100vh * 0.8); padding-right: 0.5rem;">
       <div @click="projectStore.selectedRemoteId = project.id" v-for="project in projectStore.remoteProjectsFiltered"
         class="project-row flex flex-col justify-between py-1"
         @contextmenu="showRemoteProjectRowContextMenu($event, project)"
@@ -34,7 +34,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </n-scrollbar>
   </div>
 </template>
 
@@ -46,6 +46,7 @@ import { useCloneStore, useProjectStore } from "../store"
 import ContextMenu from '@imengyu/vue3-context-menu'
 import { renderIcon } from "../common/icon";
 import { IGerritProject } from "../message/projects";
+import { open } from '@tauri-apps/api/shell';
 
 let projectStore = useProjectStore()
 let cloneStore = useCloneStore()
@@ -77,7 +78,9 @@ const showRemoteProjectRowContextMenu = (e: MouseEvent, project: IGerritProject)
       },
       {
         label: "Open on browser",
-        onClick: () => {
+        onClick: async () => {
+          console.log(project)
+          await open(`http://192.168.180.150:8080/gerrit/admin/repos/${project.name}`)
           // alert("You click a menu item");
         },
         icon: renderIcon(Open20Regular)

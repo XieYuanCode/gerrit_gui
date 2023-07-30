@@ -13,7 +13,7 @@
       </n-button>
     </div>
 
-    <div v-if="cloneStore.cloneTasks.length > 0" class="w-full overflow-y-scroll h-5/6 pr-5">
+    <div v-if="cloneStore.cloneTasks.length > 0" class="w-full overflow-y-auto h-5/6 pr-5">
       <div v-for="cloneTask in cloneStore.cloneTasks" class="clone-task-row flex justify-between items-center">
         <n-ellipsis style="max-width: 100px; margin-right: 0.5rem;">
           {{ cloneTask.repoName }}

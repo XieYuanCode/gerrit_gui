@@ -1,6 +1,6 @@
 <template>
-  <div class="quick-open-window w-full h-full rounded-md">
-    <input type="text" class="w-full py-4 px-6 text-4xl" autofocus>
+  <div class="quick-open-window w-full h-full rounded-md shadow">
+    <input type="text" class="w-full py-4 px-6 text-4xl outline-none" autofocus>
   </div>
 </template>
 
