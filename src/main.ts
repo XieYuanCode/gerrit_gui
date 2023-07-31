@@ -11,7 +11,6 @@ import { createPinia } from 'pinia'
 
 import '@imengyu/vue3-context-menu/lib/vue3-context-menu.css'
 import ContextMenu from '@imengyu/vue3-context-menu'
-import { prepare } from "./common/prepare";
 import { initStoreData } from "./common/initStoreData";
 
 const router = createRouter({
@@ -21,14 +20,13 @@ const router = createRouter({
 
 const pinia = createPinia()
 
-prepare()
 
 let app = createApp(App)
-  .use(ContextMenu)
-  .use(pinia)
-  .use(router)
-  .use(naive)
-  .mount("#app");
+.use(ContextMenu)
+.use(pinia)
+.use(router)
+.use(naive)
+.mount("#app");
 
 initStoreData()
 

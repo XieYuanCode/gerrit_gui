@@ -22,6 +22,7 @@ pub async fn toggle_setting_window_visible(app: tauri::AppHandle) -> Result<(), 
         match docs_window {
             Ok(window) => {
                 window.set_title("Setting").unwrap();
+                window.set_resizable(false).unwrap();
                 let _ = window.show();
                 Ok(())
             }

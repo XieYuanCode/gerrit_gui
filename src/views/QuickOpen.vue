@@ -9,7 +9,7 @@
 
 <style scoped>
 .quick-open-window {
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: red;
   backdrop-filter: blur(6px);
 }
 </style>

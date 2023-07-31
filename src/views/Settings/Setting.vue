@@ -47,7 +47,7 @@
             <Keyboard20Regular></Keyboard20Regular>
           </n-icon>
         </template>
-        Shortcut Panel
+        <ShortcutSettingVIew></ShortcutSettingVIew>
       </n-tab-pane>
       <n-tab-pane name="integration">
         <template #tab>
@@ -82,6 +82,7 @@ import { Settings20Regular, Color20Regular, Keyboard20Regular, PlugDisconnected2
 import { IosGitBranch, IosGitCommit } from "@vicons/ionicons4"
 
 import GeneralSettingView from "./GeneralSettingView.vue"
+import ShortcutSettingVIew from "./ShortcutSettingVIew.vue"
 </script>
 
 <style></style>

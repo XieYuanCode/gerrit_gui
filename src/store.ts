@@ -7,7 +7,9 @@ import { invoke } from "@tauri-apps/api";
 import * as tauriAutoLauncher from "tauri-plugin-autostart-api";
 import { checkLocalSSHConfig, checkRemoteSSHConfig } from "./common/prepare";
 import { IGerritProject, getProjects } from "./message/projects";
-import { join } from '@tauri-apps/api/path';
+import * as mousetrap from "mousetrap"
+import { customEventTarget } from "./common/event";
+import { toggleQuickOpenWindowVisiable } from "./common/window";
 
 export const tauriStore = new Store(".settings.dat");
 
@@ -57,7 +59,6 @@ export const useUserStore = defineStore('user', {
   }
 })
 //#endregion
-
 
 //#region Clone Task Store
 export enum CloneTaskStatus {
@@ -218,7 +219,7 @@ export const usePrepareTaskStore = defineStore("prepareTask", {
 
           // TODO:
         }),
-        new PrepareTask("Check Local SSH Config", checkLocalSSHConfig, async ()=>{
+        new PrepareTask("Check Local SSH Config", checkLocalSSHConfig, async () => {
           // TODO:
         }),
       ] as PrepareTask[]
@@ -278,5 +279,60 @@ export const useProjectStore = defineStore("projects", {
   }
 })
 //#endregion
+
+// #region shortcuts
+export class Shortcut {
+  public enable: boolean = true
+
+  constructor(
+    public title: string,
+    public key: string,
+    public action: (event: KeyboardEvent) => any
+  ) {
+    this.active()
+  }
+
+  public active() {
+    mousetrap.bind(this.key, (e) => {
+      e.preventDefault()
+
+      this.action.call(null, e)
+    })
+
+    this.enable = true
+  }
+
+  public deactive() {
+    mousetrap.unbind(this.key)
+
+    this.enable = false
+  }
+}
+export const useShortcutsStore = defineStore("shorecut", {
+  state() {
+    return {
+      shortcuts: [
+        new Shortcut("Open setting window", "mod+,", () => { invoke("toggle_setting_window_visible") }),
+        new Shortcut("Search", "mod+f", () => { customEventTarget.dispatchEvent(new Event("Shortcut.FocusSearchInput")) }),
+        new Shortcut("Quick open", "mod+shift+o", () => { toggleQuickOpenWindowVisiable() }),
+      ] as Shortcut[]
+    }
+  },
+  actions: {
+    enableAll() {
+      this.shortcuts.forEach(shortcut => shortcut.active())
+    },
+    disableAll() {
+      this.shortcuts.forEach(shortcut => shortcut.deactive())
+    }
+  },
+  getters: {
+    isEnable: (state) => {
+      return state.shortcuts.find(shortcut => shortcut.enable === true)
+    }
+  }
+})
+//#endregion
+
 
 
