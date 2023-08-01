@@ -101,7 +101,11 @@ let getTagType = (projectState: string) => {
 }
 
 onMounted(async () => {
-  await projectStore.loadRemoteProjects()
+  try {
+    await projectStore.loadRemoteProjects()
+  } catch (err) {
+    console.error(err);
+  }
 })
 </script>
 

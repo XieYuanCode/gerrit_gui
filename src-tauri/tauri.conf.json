@@ -33,7 +33,7 @@
         "all": true,
         "request": true,
         "scope": [
-          "http://192.168.180.150:8080/gerrit/a/*"
+          "http://192.168.180.150:8080/gerrit/*"
         ]
       },
       "dialog": {

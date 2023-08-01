@@ -34,7 +34,7 @@ const options = [{
 
 const address = ref("http://192.168.180.150:8080/gerrit")
 const name = ref("xieyuan")
-const password = ref("/+YbZAj0lsHfaGDYJ2Q83T+rLWD0tL2+C1gN/Btrug")
+const password = ref("123456")
 
 </script>
 
@@ -53,7 +53,7 @@ const password = ref("/+YbZAj0lsHfaGDYJ2Q83T+rLWD0tL2+C1gN/Btrug")
       </template>
     </n-empty>
     <n-modal v-model:show="showModal">
-      <n-card style="width: 320px" title="登录Gerrit账号" :bordered="true" size="huge" role="dialog" aria-modal="true">
+      <n-card style="width: 320px" title="登录Gerrit账号" :bordered="true" size="huge" role="dialog" aria-modal="true" class="select-none">
         <n-space vertical>
           <div class="flex flex-col">
             <n-space align="center">
@@ -80,8 +80,8 @@ const password = ref("/+YbZAj0lsHfaGDYJ2Q83T+rLWD0tL2+C1gN/Btrug")
           <div class="flex flex-col">
             <n-space align="center">
               <span>密码</span>
-              <n-input size="small" style="width: 160px;" type="password" v-model:value="password"></n-input>
-              <n-tooltip placement="bottom" trigger="click">
+              <n-input size="small" style="width: 195px;" type="password" v-model:value="password"></n-input>
+              <!-- <n-tooltip placement="bottom" trigger="click">
                 <template #trigger>
                   <n-button circle size="tiny">
                     <template #icon>
@@ -92,7 +92,7 @@ const password = ref("/+YbZAj0lsHfaGDYJ2Q83T+rLWD0tL2+C1gN/Btrug")
                   </n-button>
                 </template>
                 <span> 在Gerrit设置 -> HTTP Credentials页面生成 </span>
-              </n-tooltip>
+              </n-tooltip> -->
 
             </n-space>
           </div>

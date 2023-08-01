@@ -18,8 +18,9 @@ export const getProjects = async (): Promise<Array<IGerritProject>> => {
   const instance = axiosInstanceManager.getCurrentActivated()!
 
   try {
-    const projectsResponse = await instance.get(`/a/projects/?n=26&S=0&query=state%3Aactive%20OR%20state%3Aread-only`, {
-      auth: axiosInstanceManager.currentLoginAuth
+    const projectsResponse = await instance.get(`/projects/?n=26&S=0&query=state%3Aactive%20OR%20state%3Aread-only`, {
+      // auth: axiosInstanceManager.currentLoginAuth
+      withCredentials: true
     })
 
     if (projectsResponse.status === 200) {

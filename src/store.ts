@@ -282,14 +282,20 @@ export const useProjectStore = defineStore("projects", {
 
 // #region shortcuts
 export class Shortcut {
+  public readonly id: string
   public enable: boolean = true
+  public defaultKey: string
 
   constructor(
     public title: string,
+    public description: string,
     public key: string,
     public action: (event: KeyboardEvent) => any
   ) {
+    this.id = uuid()
     this.active()
+
+    this.defaultKey = key
   }
 
   public active() {
@@ -308,13 +314,13 @@ export class Shortcut {
     this.enable = false
   }
 }
-export const useShortcutsStore = defineStore("shorecut", {
+export const useShortcutsStore = defineStore("shortcut", {
   state() {
     return {
       shortcuts: [
-        new Shortcut("Open setting window", "mod+,", () => { invoke("toggle_setting_window_visible") }),
-        new Shortcut("Search", "mod+f", () => { customEventTarget.dispatchEvent(new Event("Shortcut.FocusSearchInput")) }),
-        new Shortcut("Quick open", "mod+shift+o", () => { toggleQuickOpenWindowVisiable() }),
+        new Shortcut("Preferences...", "Open preference window", "mod+,", () => { invoke("toggle_setting_window_visible") }),
+        new Shortcut("Search", "Focus the search input in the top right corner of the window that allows you to search for everything", "mod+f", () => { customEventTarget.dispatchEvent(new Event("Shortcut.FocusSearchInput")) }),
+        new Shortcut("Quick Open", "Open quick open window that allows you to quick open local projects", "mod+shift+o", () => { toggleQuickOpenWindowVisiable() })
       ] as Shortcut[]
     }
   },
@@ -329,7 +335,13 @@ export const useShortcutsStore = defineStore("shorecut", {
   getters: {
     isEnable: (state) => {
       return state.shortcuts.find(shortcut => shortcut.enable === true)
-    }
+    },
+    customized: (state) => {
+      return state.shortcuts.filter(shortcut => shortcut.key !== shortcut.defaultKey)
+    },
+    defaulted: (state) => {
+      return state.shortcuts.filter(shortcut => shortcut.key === shortcut.defaultKey)
+    },
   }
 })
 //#endregion

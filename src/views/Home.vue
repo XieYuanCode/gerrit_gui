@@ -41,6 +41,7 @@ import { customEventTarget } from '../common/event';
 
 const prepareTaskStore = usePrepareTaskStore()
 customEventTarget.addEventListener("DataReady", () => {
+  console.log(123);
   prepareTaskStore.startAllTasks()
 })
 

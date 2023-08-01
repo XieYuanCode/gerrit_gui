@@ -15,7 +15,7 @@ pub async fn toggle_setting_window_visible(app: tauri::AppHandle) -> Result<(), 
         let docs_window = tauri::WindowBuilder::new(
             &app,
             "setting_window", /* the unique window label */
-            tauri::WindowUrl::External("http://localhost:1420/#/setting".parse().unwrap()),
+            tauri::WindowUrl::External("http://192.168.180.150:8080/gerrit".parse().unwrap()),
         )
         .build();
 

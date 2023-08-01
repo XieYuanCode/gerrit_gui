@@ -12,12 +12,16 @@ export const loginGerrit = async (address: string, username: string, password: s
   const instance = axiosInstanceManager.get(address)
 
   try {
-    const response = await instance.get(`/a/accounts/self/detail`, {
+    const response = await instance.get(`/login/`, {
       auth: {
         username,
         password
+      },
+      headers: {
+        Connection: "keep-alive"
       }
     });
+    console.log(response);
 
     if (response.status === 200) {
       axiosInstanceManager.currentLoginedAddress = address
@@ -25,7 +29,12 @@ export const loginGerrit = async (address: string, username: string, password: s
         username,
         password
       }
-      return JSON.parse((response.data as string).replace(")]}'", "")) as ILoginResult
+      return {
+        'name': "asd",
+        'email': "asd",
+        "username": "asd",
+        "registered_on": "asd",
+      }
     } else {
       throw new Error(response.status.toString())
     }
