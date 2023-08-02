@@ -9,4 +9,4 @@ export { PrepareTask, PrepareTaskStatus, usePrepareTaskStore } from "./prepareTa
 export { useViewModelStore } from "./viewModelStore"
 export { useProjectStore } from "./projectStore"
 export { Shortcut, useShortcutsStore } from "./shortcutStore"
-export { useTerminalStore } from "./terminalStore"
+export { useTerminalStore, LogLevel } from "./terminalStore"

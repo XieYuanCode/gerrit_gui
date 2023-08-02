@@ -16,7 +16,7 @@
           <n-button @click="update_default_clone_directory">Update Default Clone Dir</n-button>
           <n-button @click="show_in_folder">Show In Folder</n-button>
           <n-button @click="show_in_terminal">Show In Terminal</n-button>
-          <n-button @click="terminalStore.appendLog('asdjkghjkqwbniuxgvuiansoxauisnuigvhadfpioanmsdoqgbouxvb')">Push A
+          <n-button @click="terminalStore.appendLog('asdad90a7s09cia90suc0ascua09scj0asjc0ajs', LogLevel.error)">Push A
             Log</n-button>
         </n-space>
       </div>
@@ -32,22 +32,7 @@
 
       <n-card class="a h-72 fixed bottom-0 z-0" style="width: calc(100% - 272px);" embedded hoverable
         v-show="terminalStore.terminalPanelVisible">
-        <div class="flex flex-col">
-          <div class="w-full flex justify-between items-center">
-            <span class="a text-lg">Terminal</span>
-
-            <n-button quaternary circle size="tiny" title="clear" @click="terminalStore.clear()">
-              <template #icon>
-                <n-icon>
-                  <Delete20Regular />
-                </n-icon>
-              </template>
-            </n-button>
-          </div>
-          <n-divider></n-divider>
-
-          <n-log :rows="10" :log="terminalStore.formattedLogs" />
-        </div>
+        <Terminal></Terminal>
       </n-card>
     </n-layout-content>
 
@@ -58,16 +43,16 @@
             <img src="src/assets/download.svg" width="200" height="200" class="a drop-shadow-xl" />
           </div>
           <div class="right-panel flex flex-col w-full items-center">
-            <div class="right-panel-title text-4xl mb-4">
-              Clone
+            <div class="right-panel-title text-4xl mb-8">
+              Clone Project
             </div>
             <div class="flex justify-around items-start w-full mb-2">
-              <div class="flex flex-col w-1/4 items-end pr-1">
+              <div class="flex flex-col items-end pr-1" style="width: 28%;">
                 <span>Remote URL : </span>
                 <span style="margin-top: 10px;">Clone To : </span>
                 <span style="margin-top: 10px;">Gerrit commit hook : </span>
               </div>
-              <div class="flex flex-col w-3/4 items-start pl-2 relative">
+              <div class="flex flex-col items-start pl-2 relative"  style="width: 72%;">
                 <input v-model="cloneStore.cloneModel.remoteURL" type="text" class="clone-form-input w-full"
                   placeholder="Remote URL" />
                 <n-icon class="asd absolute" style="top: 3px; left: 7px;">
@@ -84,7 +69,8 @@
                 <n-checkbox style="margin-top: 5px;" v-model:checked="cloneStore.cloneModel.gerritCommitHook" />
               </div>
             </div>
-            <div class="actions w-full flex justify-end items-center mt-10">
+            <n-divider></n-divider>
+            <div class="actions w-full flex justify-end items-center">
               <n-space>
                 <n-button size="small" @click="cloneStore.cloneModel.visible = false">Cancel</n-button>
                 <n-button size="small" type="primary" ghost
@@ -101,16 +87,13 @@
             {{ cloneStore.cloneModel.errorMessage }}
           </div>
         </div>
-        <!-- <template #footer>
-          尾部
-        </template> -->
       </n-card>
     </n-modal>
   </n-layout>
 </template>
 
 <script setup lang="ts">
-import { tauriStore, useUserStore, usePrepareTaskStore, useTerminalStore, useCloneStore } from '../store';
+import { tauriStore, useUserStore, usePrepareTaskStore, useTerminalStore, useCloneStore, LogLevel } from '../store';
 import { NIcon, useMessage } from "naive-ui"
 import Explorer from "./Explorer.vue"
 import { invoke } from '@tauri-apps/api/tauri'
@@ -120,6 +103,7 @@ import ContextMenu from '@imengyu/vue3-context-menu'
 import { open } from '@tauri-apps/api/dialog';
 import Toolbar from './Toolbar.vue';
 import { customEventTarget } from '../common/event';
+import Terminal from "./Terminal.vue"
 import { Earth20Regular, Folder20Regular, ErrorCircle20Regular, CalendarWeekStart20Regular, Delete20Regular } from "@vicons/fluent"
 
 const prepareTaskStore = usePrepareTaskStore()

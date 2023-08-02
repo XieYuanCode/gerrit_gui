@@ -84,7 +84,7 @@ pub fn show_in_folder(path: String) {
 
 
 #[tauri::command]
-pub fn show_in_terminal(_path: String) {
+pub fn show_in_terminal(path: String) {
   #[cfg(target_os = "windows")]
   {
     Command::new("wt")

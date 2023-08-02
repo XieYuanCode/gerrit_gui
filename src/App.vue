@@ -5,6 +5,24 @@ import { tauriStore, useUserStore, useShortcutsStore } from "./store";
 import { useRouter } from "vue-router"
 import axiosInstanceManager from "./message/axios";
 import { customEventTarget } from "./common/event";
+import hljs from 'highlight.js/lib/core'
+
+hljs.registerLanguage('gerrit-gui-log', () => ({
+  contains: [
+    {
+      className: "gerrit-gui-terminal-date",
+      begin: /^\[\d{4}\/[0-9]\/[0-9] [0-9]*\:[0-9]*\:[0-9]*\]/,
+    },
+    {
+      className: "gerrit-gui-terminal-info",
+      begin: "Info"
+    },
+    {
+      className: "gerrit-gui-terminal-error",
+      begin: "Error"
+    }
+  ]
+}))
 
 const router = useRouter();
 const userStore = useUserStore()
@@ -37,10 +55,12 @@ onMounted(async () => {
 </script>
 
 <template>
-  <n-message-provider>
-    <router-view>
-    </router-view>
-  </n-message-provider>
+  <n-config-provider :hljs="hljs" class="h-full w-full">
+    <n-message-provider>
+      <router-view>
+      </router-view>
+    </n-message-provider>
+  </n-config-provider>
 </template>
 
 <style scoped></style>

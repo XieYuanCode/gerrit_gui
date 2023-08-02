@@ -10,3 +10,24 @@ html, body, #app {
 :root {
   --select-bg-color: #b8e2cc
 }
+
+
+.hljs-gerrit-gui-terminal-date {
+  color: rgb(141, 179, 223)!important;
+}
+
+.hljs-gerrit-gui-terminal-info {
+  color: rgb(0, 0, 0)!important;
+}
+
+.hljs-gerrit-gui-terminal-debug {
+  color: rgb(107, 163, 226)!important;
+}
+
+.hljs-gerrit-gui-terminal-success {
+  color: rgb(138, 238, 138)!important;
+}
+
+.hljs-gerrit-gui-terminal-error {
+  color: rgb(241, 97, 97)!important;
+}
