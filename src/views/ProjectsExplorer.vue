@@ -62,14 +62,14 @@ const showRemoteProjectRowContextMenu = (e: MouseEvent, project: IGerritProject)
       {
         label: "Gerrit Clone",
         onClick: () => {
-          cloneStore.gerritClone(project.name)
+          cloneStore.showCloneConfirm(project.name)
         },
         icon: renderIcon(ArrowDownload20Regular)
       },
       {
         label: "Clone",
         onClick: () => {
-          cloneStore.clone(project.name)
+          cloneStore.showCloneConfirm(project.name, false)
         },
         icon: renderIcon(ArrowDownload20Regular)
       },
@@ -124,6 +124,6 @@ onMounted(async () => {
 }
 
 .project-row-selected {
-  background-color: rgba(0, 0, 0, 0.20);
+  background-color:  var(--select-bg-color);
 }
 </style>

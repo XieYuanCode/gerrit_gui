@@ -24,7 +24,8 @@ fn main() {
             crate::directory::show_in_folder,
             crate::directory::show_in_terminal,
             crate::ssh::get_local_ssh_configs,
-            crate::ssh::is_ssh_config_available
+            crate::ssh::is_ssh_config_available,
+            crate::common::search_for_all_applications
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

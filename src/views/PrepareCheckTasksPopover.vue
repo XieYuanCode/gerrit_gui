@@ -23,7 +23,7 @@
             </ArrowClockwise20Filled>
           </n-icon>
 
-          <n-button size="tiny" class="fix-button mb-2" @click="prepareTask.fix()">{{ prepareTask.fixButtonText || "Fix" }}</n-button>
+          <n-button size="tiny" class="fix-button mb-2" @click="prepareTask.fix()" v-if="prepareTask.status === PrepareTaskStatus.Failed">{{ prepareTask.fixButtonText || "Fix" }}</n-button>
         </n-space>
 
       </div>

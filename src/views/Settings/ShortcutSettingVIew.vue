@@ -68,9 +68,11 @@
         </div>
       </n-card>
 
-      <div style="height: 430px;" class="flex flex-col justify-between">
+      <div style="height: 430px; width: 100%;" class="flex flex-col justify-between">
         <div>
           <ShortcutKey :shortcutKey="selectShortcut!.key" type="image" style="margin-left: 5px;"></ShortcutKey>
+
+          <n-divider></n-divider>
 
           <div style="margin-top: 10px; margin-left: 10px;" class="asd font-bold select-none">{{ selectShortcut?.title }}
           </div>
@@ -79,7 +81,8 @@
         </div>
 
         <div style="margin-left: 10px;" class="flex">
-          <n-button quaternary circle title="reset" size="small" :disabled="selectShortcut!.key === selectShortcut!.defaultKey">
+          <n-button quaternary circle title="reset" size="small"
+            :disabled="selectShortcut!.key === selectShortcut!.defaultKey">
             <template #icon>
               <n-icon>
                 <ArrowReset20Regular />
@@ -119,7 +122,7 @@ import { renderIcon } from "../../common/icon";
 const shortcutsStore = useShortcutsStore()
 const selectShortcutID = ref(shortcutsStore.shortcuts[0].id)
 const searchText = ref("")
-const editingShortcutID = ref(shortcutsStore.shortcuts[0].id)
+const editingShortcutID = ref("")
 
 const selectShortcut = computed(() => {
   return shortcutsStore.shortcuts.find(shortcut => shortcut.id === selectShortcutID.value)
@@ -141,23 +144,11 @@ const startEditShortcut = (id: string) => {
   })
 }
 
-const filteredCustomizedShortcuts = computed(() => {
+const filteredCustomizedShortcuts = computed<Shortcut[]>(() => {
   if (searchText.value === "") {
     return shortcutsStore.customized
   } else {
-    let result: Shortcut[] = []
-    result.concat(shortcutsStore.customized.filter(s => s.title.includes(searchText.value)))
-
-    const keys = searchText.value.split(" ")
-    result.concat(shortcutsStore.customized.filter(s => {
-      keys.forEach(key => {
-        if (s.key.includes(key)) {
-          return s
-        }
-      })
-    }))
-
-    return result
+    return shortcutsStore.customized.filter(s => s.title.includes(searchText.value))
   }
 })
 
@@ -259,11 +250,11 @@ const showContextMenu = (e: MouseEvent, shortcut: Shortcut) => {
 }
 
 .shortcut-item-select {
-  background-color: #b8e2cc !important;
+  background-color: var(--select-bg-color) !important;
 }
 
 .edit-shortcut-input {
-  background-color: #b8e2cc;
+  background-color: var(--select-bg-color);
   outline: none;
   border-bottom: 1px solid #7e9b8c;
 }
