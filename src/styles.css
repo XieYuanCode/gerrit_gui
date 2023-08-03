@@ -13,7 +13,7 @@ html, body, #app {
 
 
 .hljs-gerrit-gui-terminal-date {
-  color: rgb(141, 179, 223)!important;
+  color: rgb(93, 169, 216)!important;
 }
 
 .hljs-gerrit-gui-terminal-info {
@@ -21,11 +21,11 @@ html, body, #app {
 }
 
 .hljs-gerrit-gui-terminal-debug {
-  color: rgb(107, 163, 226)!important;
+  color: rgb(64, 99, 140)!important;
 }
 
 .hljs-gerrit-gui-terminal-success {
-  color: rgb(138, 238, 138)!important;
+  color: rgb(93, 163, 93)!important;
 }
 
 .hljs-gerrit-gui-terminal-error {

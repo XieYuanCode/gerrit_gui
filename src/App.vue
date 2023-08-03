@@ -15,11 +15,19 @@ hljs.registerLanguage('gerrit-gui-log', () => ({
     },
     {
       className: "gerrit-gui-terminal-info",
-      begin: "Info"
+      begin: / \- info \- /
+    },
+    {
+      className: "gerrit-gui-terminal-debug",
+      begin: / \- debug \- /
+    },
+    {
+      className: "gerrit-gui-terminal-success",
+      begin: / \- success \- /
     },
     {
       className: "gerrit-gui-terminal-error",
-      begin: "Error"
+      begin: / \- error \- /
     }
   ]
 }))

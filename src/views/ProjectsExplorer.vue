@@ -5,7 +5,7 @@
         <n-icon :component="Filter20Regular" />
       </template>
     </n-input>
-    <n-scrollbar class="scroll-view" style="max-height: calc(100vh * 0.8); padding-right: 0.5rem;">
+    <n-scrollbar class="scroll-view" style="max-height: calc(100vh * 0.75); padding-right: 0.5rem;">
       <div @click="projectStore.selectedRemoteId = project.id" v-for="project in projectStore.remoteProjectsFiltered"
         class="project-row flex flex-col justify-between py-1"
         @contextmenu="showRemoteProjectRowContextMenu($event, project)"

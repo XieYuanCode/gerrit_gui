@@ -17,6 +17,12 @@
           <n-button @click="show_in_folder">Show In Folder</n-button>
           <n-button @click="show_in_terminal">Show In Terminal</n-button>
           <n-button @click="terminalStore.appendLog('asdad90a7s09cia90suc0ascua09scj0asjc0ajs', LogLevel.error)">Push A
+            error Log</n-button>
+          <n-button @click="terminalStore.appendLog('asdkhaksjx asgbkjxnoalsxioajnskxmas', LogLevel.success)">Push A
+            success Log</n-button>
+          <n-button @click="terminalStore.appendLog('asdkhaksjx asgbkjxnoalsxioajnskxmas', LogLevel.info)">Push A info
+            Log</n-button>
+          <n-button @click="terminalStore.appendLog('asdkhaksjx asgbkjxnoalsxioajnskxmas', LogLevel.debug)">Push A debug
             Log</n-button>
         </n-space>
       </div>
@@ -37,57 +43,7 @@
     </n-layout-content>
 
     <n-modal v-model:show="cloneStore.cloneModel.visible" id="clone-confirm-dialog">
-      <n-card style="width: 800px" :bordered="true" size="huge" role="dialog" aria-modal="true" class="select-none">
-        <div class="w-full flex justify-between items-center relative">
-          <div class="left-panel">
-            <img src="src/assets/download.svg" width="200" height="200" class="a drop-shadow-xl" />
-          </div>
-          <div class="right-panel flex flex-col w-full items-center">
-            <div class="right-panel-title text-4xl mb-8">
-              Clone Project
-            </div>
-            <div class="flex justify-around items-start w-full mb-2">
-              <div class="flex flex-col items-end pr-1" style="width: 28%;">
-                <span>Remote URL : </span>
-                <span style="margin-top: 10px;">Clone To : </span>
-                <span style="margin-top: 10px;">Gerrit commit hook : </span>
-              </div>
-              <div class="flex flex-col items-start pl-2 relative"  style="width: 72%;">
-                <input v-model="cloneStore.cloneModel.remoteURL" type="text" class="clone-form-input w-full"
-                  placeholder="Remote URL" />
-                <n-icon class="asd absolute" style="top: 3px; left: 7px;">
-                  <Earth20Regular />
-                </n-icon>
-                <div class="flex justify-between items-end w-full" style="margin-top: 10px; ">
-                  <input v-model="cloneStore.cloneModel.cloneTo" type="text" class="clone-form-input"
-                    placeholder="Local Directory" style="width: 340px;" />
-                  <n-button size="tiny">Browser...</n-button>
-                </div>
-                <n-icon class="asd absolute" style="top: 38px; left: 7px;">
-                  <Folder20Regular />
-                </n-icon>
-                <n-checkbox style="margin-top: 5px;" v-model:checked="cloneStore.cloneModel.gerritCommitHook" />
-              </div>
-            </div>
-            <n-divider></n-divider>
-            <div class="actions w-full flex justify-end items-center">
-              <n-space>
-                <n-button size="small" @click="cloneStore.cloneModel.visible = false">Cancel</n-button>
-                <n-button size="small" type="primary" ghost
-                  :disabled="cloneStore.cloneModel.cloneButtonDisable">Clone</n-button>
-              </n-space>
-            </div>
-          </div>
-
-          <div class="warring-message absolute bottom-0 left-0 text-sm text-red-500 flex items-center"
-            v-if="cloneStore.cloneModel.errorMessage">
-            <n-icon class="mr-1">
-              <ErrorCircle20Regular />
-            </n-icon>
-            {{ cloneStore.cloneModel.errorMessage }}
-          </div>
-        </div>
-      </n-card>
+      <CloneDialog></CloneDialog>
     </n-modal>
   </n-layout>
 </template>
@@ -104,7 +60,8 @@ import { open } from '@tauri-apps/api/dialog';
 import Toolbar from './Toolbar.vue';
 import { customEventTarget } from '../common/event';
 import Terminal from "./Terminal.vue"
-import { Earth20Regular, Folder20Regular, ErrorCircle20Regular, CalendarWeekStart20Regular, Delete20Regular } from "@vicons/fluent"
+import CloneDialog from "./Dialog/CloneDialog.vue"
+import { CalendarWeekStart20Regular } from "@vicons/fluent"
 
 const prepareTaskStore = usePrepareTaskStore()
 const cloneStore = useCloneStore()
@@ -197,11 +154,4 @@ const show_in_terminal = () => invoke("show_in_terminal", { path: "e:/Documents/
 </script>
 
 <style scoped>
-.clone-form-input {
-  font-size: 12px;
-  height: 25px;
-  outline: none;
-  border-bottom: 1px solid rgb(164, 164, 164);
-  padding-left: 20px;
-  padding-bottom: 5px;
-}</style>
+</style>

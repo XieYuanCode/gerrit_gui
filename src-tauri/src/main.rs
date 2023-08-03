@@ -7,6 +7,7 @@ mod clone;
 mod common;
 mod directory;
 mod ssh;
+mod git;
 
 fn main() {
     tauri::Builder::default()
@@ -25,7 +26,8 @@ fn main() {
             crate::directory::show_in_terminal,
             crate::ssh::get_local_ssh_configs,
             crate::ssh::is_ssh_config_available,
-            crate::common::search_for_all_applications
+            crate::common::search_for_all_applications,
+            crate::git::git_command_ls_remote
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

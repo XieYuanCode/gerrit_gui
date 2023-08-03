@@ -110,9 +110,10 @@
         </n-button>
         <!-- Clone Popover -->
         <n-popover trigger="click" placement="bottom-end">
+          
           <template #trigger>
             <n-button size="small" quaternary title="Clone Tasks">
-              <n-badge :value="1" dot v-if="cloneStore.hasRunningCloneTask" processing
+              <n-badge :value="1" dot v-if="!!cloneStore.cloneTasks.find(task => task.status === CloneTaskStatus.Running)" processing
                 :type="cloneStore.hasFailedCloneTask ? 'error' : 'info'">
                 <n-icon>
                   <ArrowDownload20Regular style="scale: 1.3;"></ArrowDownload20Regular>
@@ -163,7 +164,7 @@
 
 <script setup lang="ts">
 import { ArrowLeft20Regular, CalendarWeekStart20Regular, Folder20Regular, ArrowCurveUpRight20Regular, ArrowCurveDownLeft20Regular, ArrowRight20Regular, ArrowUp20Regular, Merge24Regular, CheckmarkStarburst20Regular, Search20Regular, ArrowClockwise20Regular, ErrorCircle20Regular, ArrowAutofitUp20Regular, ArrowAutofitDown20Regular, ArrowDownload20Regular } from "@vicons/fluent"
-import { usePrepareTaskStore, useViewModelStore, useCloneStore } from "../store"
+import { usePrepareTaskStore, useViewModelStore, useCloneStore, CloneTaskStatus } from "../store"
 import ClonePopover from "./ClonePopover.vue"
 import PrepareCheckTasksPopover from "./PrepareCheckTasksPopover.vue"
 import { computed, onMounted, ref } from "vue"

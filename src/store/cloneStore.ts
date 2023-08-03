@@ -4,6 +4,7 @@ import { invoke } from "@tauri-apps/api"
 import { defineStore } from "pinia"
 import { useUserStore } from "./userStore"
 import { useGeneralSettingStore } from "./generalSettingStore"
+import { exists, BaseDirectory } from '@tauri-apps/api/fs';
 
 export enum CloneTaskStatus {
   UnStart, Running, Succeed, Failed
@@ -17,10 +18,19 @@ export class CloneTask {
   id: string = uuid()
 
   constructor(
-    public repoName: string
+    public remoteUrl: string,
+    public cloneTo: string
   ) { }
 
+
+  public get repoName(): string {
+    const userStore = useUserStore()
+    return this.remoteUrl.replace(`ssh://${userStore.username}@192.168.180.150:29418/`, "")
+  }
+
+
   async clone() {
+    this.status = CloneTaskStatus.Running
     let unListenForTotalObjectsUpdatedEvent = await listen("clone_total_objects_updated", (t: any) => {
       this.totalObjects = t.payload.message
     })
@@ -28,15 +38,15 @@ export class CloneTask {
       this.receivedObjects = r.payload.message
 
       this.progress = this.receivedObjects / this.totalObjects * 100
-      console.log(this.progress);
     })
 
     try {
       // let localPath = await join()
       await invoke("clone_gerrit_project", {
-        remotePath: "ssh://xieyuan@192.168.180.150:29418/ufe/aep-base",
-        localPath: "/Users/xieyuan/code/gerrit/aep-base"
+        remotePath: this.remoteUrl,
+        localPath: this.cloneTo
       })
+      this.status = CloneTaskStatus.Succeed
 
     } catch (error) {
       this.status = CloneTaskStatus.Failed
@@ -55,13 +65,25 @@ export const useCloneStore = defineStore("clone", {
         visible: false,
         remoteURL: "",
         cloneTo: "",
-        cloneButtonDisable: true,
         gerritCommitHook: true,
-        errorMessage: ""
+        errorMessage: "",
+        message: "",
+        isCloning: false,
       }
     }
   },
   getters: {
+    projectName: (state) => {
+      let userStore = useUserStore()
+      return state.cloneModel.remoteURL.replace(`ssh://${userStore.username}@192.168.180.150:29418/`, "")
+    },
+    cloneButtonDisable: (state) => {
+      if (state.cloneModel.isCloning === true) {
+        return true
+      } else {
+        return !state.cloneModel.remoteURL || !state.cloneModel.cloneTo
+      }
+    },
     hasRunningCloneTask: (state) => {
       return !!state.cloneTasks.find(task => task.status === CloneTaskStatus.Running)
     },
@@ -79,21 +101,41 @@ export const useCloneStore = defineStore("clone", {
       this.cloneModel.remoteURL = `ssh://${userStore.username}@192.168.180.150:29418/${projectName}`
       this.cloneModel.cloneTo = `${generalSettingStore.defaultClonedDir}/${projectBaseName}`;
       this.cloneModel.gerritCommitHook = gerritHook
+      this.cloneModel.message = ""
+      this.cloneModel.errorMessage = ""
 
       this.cloneModel.visible = true
     },
 
-    async clone(projectName: string) {
+    async clone() {
+      this.cloneModel.isCloning = true
 
+      const isTargetFolderExists = await exists(this.cloneModel.cloneTo)
 
-      // let task = new CloneTask(projectName)
-      // this.cloneTasks.push(task)
-      // await task.clone()
-    },
-    gerritClone(projectName: string) {
-      this.cloneModel.visible = true
-      // git clone "ssh://xieyuan@192.168.180.150:29418/ufe/aep-base" && scp -p -P 29418 xieyuan@192.168.180.150:hooks/commit-msg "aep-base/.git/hooks/"
-      console.log(projectName);
+      if (isTargetFolderExists === true) {
+        this.cloneModel.isCloning = false
+        this.cloneModel.errorMessage = "The target directory already exists"
+        return;
+      }
+
+      const legalGitRepo = await invoke("git_command_ls_remote", {
+        remoteUrl: this.cloneModel.remoteURL
+      })
+
+      if (legalGitRepo === false) {
+        this.cloneModel.isCloning = false
+        this.cloneModel.errorMessage = "Unable to connect to or authorizing a git repository"
+        return;
+      }
+
+      let cloneTask = new CloneTask(this.cloneModel.remoteURL, this.cloneModel.cloneTo)
+
+      this.cloneTasks.push(cloneTask)
+
+      await cloneTask.clone()
+
+      this.cloneModel.isCloning = false
+      this.cloneModel.message = "Clone success"
     }
   }
 })

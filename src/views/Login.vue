@@ -3,19 +3,21 @@ import { NoAccountsFilled, AccountCircleOutlined } from "@vicons/material"
 import { ref } from "vue"
 import { Earth20Regular, Question20Regular } from "@vicons/fluent"
 import { useMessage } from "naive-ui"
-import { useUserStore } from "../store"
+import { useTerminalStore, useUserStore } from "../store"
 import { useRouter } from "vue-router"
 
 const router = useRouter();
 
 const message = useMessage()
 const userStore = useUserStore()
+const terminalStore = useTerminalStore()
 
 const login = async () => {
   try {
     await userStore.login(address.value, name.value, password.value)
 
     message.success(`登录成功，欢迎: ${userStore.name}`)
+    terminalStore.appendLog(`[Login] 登录成功，用户信息: ${userStore.name}`)
     showModal.value = false
 
     router.push("/home")
