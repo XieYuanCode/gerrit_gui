@@ -34,9 +34,10 @@
         <n-divider></n-divider>
         <div class="actions w-full flex justify-end items-center">
           <n-space>
-            <n-button size="small" @click="cloneStore.cloneModel.visible = false">{{ cloneStore.cloneModel.isCloning ? 'Minimize': 'Cancel' }}</n-button>
-            <n-button size="small" type="primary" ghost
-              :disabled="cloneStore.cloneButtonDisable" @click="cloneStore.clone()" :loading="cloneStore.cloneButtonDisable">Clone</n-button>
+            <n-button size="small" @click="cloneStore.cloneModel.visible = false">{{ cloneStore.cloneModel.isCloning ?
+              'Minimize' : 'Cancel' }}</n-button>
+            <n-button size="small" type="primary" ghost :disabled="cloneStore.cloneButtonDisable"
+              @click="cloneStore.clone()" :loading="cloneStore.cloneButtonDisable">Clone</n-button>
           </n-space>
         </div>
       </div>
@@ -46,7 +47,9 @@
         <n-icon class="mr-1">
           <ErrorCircle20Regular />
         </n-icon>
-        {{ cloneStore.cloneModel.errorMessage }}
+        <n-ellipsis style="max-width: 240px">
+          {{ cloneStore.cloneModel.errorMessage }}
+        </n-ellipsis>
       </div>
       <div v-else v-if="cloneStore.cloneModel.message" class="absolute bottom-0 left-0 text-sm flex items-center">
         {{ cloneStore.cloneModel.message }}

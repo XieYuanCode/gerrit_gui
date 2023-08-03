@@ -50,6 +50,7 @@ export class CloneTask {
 
     } catch (error) {
       this.status = CloneTaskStatus.Failed
+      throw error
     } finally {
       unListenForTotalObjectsUpdatedEvent()
       unListenForReceivedObjectsUpdatedEvent()
@@ -132,10 +133,16 @@ export const useCloneStore = defineStore("clone", {
 
       this.cloneTasks.push(cloneTask)
 
-      await cloneTask.clone()
+      try {
+        await cloneTask.clone()
+        
+        this.cloneModel.message = "Clone success"
+      } catch (error) {
+        this.cloneModel.errorMessage = error as string
+      } finally {
+        this.cloneModel.isCloning = false
+      }
 
-      this.cloneModel.isCloning = false
-      this.cloneModel.message = "Clone success"
     }
   }
 })
